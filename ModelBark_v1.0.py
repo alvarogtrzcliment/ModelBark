@@ -28,6 +28,7 @@ class Plant:
         self.phloem_storage = [0]
         self.inactive_phloem_storage = [0]
         self.phellem_storage = [0]
+        self.phelloderm_storage = [0]
         self.equation_storage = [1]
         self.first_phellogen_storage = 0
 
@@ -66,7 +67,7 @@ class Plant:
         insert_place = (
             radius_length - (round((radius_length - vascular_cambium_position) * percentage)))
 
-        radius_mod.insert(insert_place, 2)
+        radius_mod.insert(insert_place, 3)
 
         self.radius = radius_mod
 
@@ -74,34 +75,47 @@ class Plant:
 
         self.number_phellogen = 1
 
-    def phellogen_division(self, pdr: float):
+    def phellem_production(self, pdr: float):
 
         radius_mod = self.radius
 
         number_phellogen_mod = self.number_phellogen
 
-        phellogen_position = radius_mod.index(2)
+        phellogen_position = radius_mod.index(3)
 
         if self.sample(pdr) == 0:
             radius_mod.insert(phellogen_position + 1,
-                              (number_phellogen_mod + 2))
+                              (number_phellogen_mod + 3))
 
         self.radius = radius_mod
 
+    def phelloderm_production(self, pddr: float):
+
+        radius_mod = self.radius
+
+        phellogen_position = radius_mod.index(3)
+
+        if self.sample(pddr) == 0:
+            radius_mod.insert(phellogen_position + 1,
+                              (2))
+        
+        self.radius = radius_mod
+
+        
     def new_phellogen(self, percentage: float):
 
         radius_mod = self.radius
 
         vascular_cambium_position = radius_mod.index(1)
 
-        phellogen_position = radius_mod.index(2)
+        phellogen_position = radius_mod.index(3)
 
         insert_place = (phellogen_position - round((phellogen_position -
                         vascular_cambium_position) * percentage))
 
-        radius_mod[phellogen_position] = (self.number_phellogen + 2)
+        radius_mod[phellogen_position] = (self.number_phellogen + 3)
 
-        radius_mod.insert(insert_place, 2)
+        radius_mod.insert(insert_place, 3)
 
         self.number_phellogen += 1
 
@@ -117,7 +131,7 @@ class Plant:
 
         number_phellogen = self.number_phellogen
 
-        return int(radius_mod.count(number_phellogen + 2))
+        return int(radius_mod.count(number_phellogen + 3))
 
     def num_xylem_cells(self):
 
@@ -131,6 +145,8 @@ class Plant:
 
         vascular_cambium_position = radius_mod.index(1)
 
+        # TODO: Buscar una forma mejor de contar las células de floema, esta no nos vale
+
         if radius_mod.count(2) == 1:
 
             phellogen_position = radius_mod.index(2)
@@ -143,6 +159,8 @@ class Plant:
 
         radius_mod = self.radius
 
+        # TODO: Buscar una forma mejor de contar las células de felema
+
         if radius_mod.count(2) == 0:
             return 0
 
@@ -150,6 +168,14 @@ class Plant:
             num_xylem_or_phloem_cells = radius_mod.count(0)
             radius_length = len(radius_mod)
             return radius_length - num_xylem_or_phloem_cells
+        
+        
+    def num_phelloderm_cells(self):
+
+        radius_mod = self.radius
+
+        # TODO: Buscar una forma mejor de contar las células de felodermis
+
 
     def num_inactive_phloem_cells(self):
 
@@ -165,6 +191,8 @@ class Plant:
 
     def parameters(self):
 
+        # TODO: Añadir las células de felodermis a las parámetros
+
         xylem = self.num_xylem_cells()
 
         phloem = self.num_phloem_cells()
@@ -173,9 +201,13 @@ class Plant:
 
         inactive_phloem = self.num_inactive_phloem_cells()
 
-        return [xylem, phloem, phellem, inactive_phloem]
+        phelloderm = self.num_phelloderm_cells()
 
-    def equation(self, a, b, c, d):
+        return [xylem, phloem, phellem, inactive_phloem, phelloderm]
+
+    def equation(self, a, b, c, d, e):
+
+        # TODO: Añadir las células de felodermis a las ecuación
 
         radius_parameters = self.parameters()
 
@@ -187,9 +219,13 @@ class Plant:
 
         inactive_phloem_d = d * radius_parameters[3]
 
+        phelloderm_e = e * radius_parameters[4]
+
+        # TODO: Añadir la felodermis a la ecuación
+
         return (1 + phellem_c + inactive_phloem_d) / (xylem_a + phloem_b)
 
-    def graphical_parameters_storage(self, a, b, c, d):
+    def graphical_parameters_storage(self, a, b, c, d, e):
 
         self.xylem_storage.append(self.num_xylem_cells())
 
@@ -199,7 +235,9 @@ class Plant:
 
         self.inactive_phloem_storage.append(self.num_inactive_phloem_cells())
 
-        self.equation_storage.append(self.equation(a, b, c, d))
+        self.phelloderm_storage.append(self.num_phelloderm_cells)
+
+        self.equation_storage.append(self.equation(a, b, c, d, e))
 
     def result(self):
 
@@ -228,6 +266,8 @@ class Plant:
 
         plt.plot(self.inactive_phloem_storage, label='Inactive Phloem')
 
+        plt.plot(self.phelloderm_storage, label= 'Phelloderm')
+
         plt.legend()
 
         plt.title('Parameters of the model through time')
@@ -251,14 +291,14 @@ class Plant:
         plt.close()
 
 
-def simulation_generation(vascular_cambium_division_rate: float, phellogen_division_rate: float, phellogen_position: float, a: float, b: float, c: float, d: float, threshold: float, max_length: int):
+def simulation_generation(vascular_cambium_division_rate: float, phellogen_division_rate: float, phelloderm_division_rate: float ,phellogen_position: float, a: float, b: float, c: float, d: float, e:float, threshold: float, max_length: int):
     simulation = Plant()
     simulation.vascular_cambium_division(vascular_cambium_division_rate)
-    simulation.graphical_parameters_storage(a, b, c, d)
+    simulation.graphical_parameters_storage(a, b, c, d, e)
 
-    while simulation.equation(a, b, c, d) >= threshold:
+    while simulation.equation(a, b, c, d, e) >= threshold:
         simulation.vascular_cambium_division(vascular_cambium_division_rate)
-        simulation.graphical_parameters_storage(a, b, c, d)
+        simulation.graphical_parameters_storage(a, b, c, d, e)
 
         if simulation.radius_length() >= max_length:
             break
@@ -272,11 +312,12 @@ def simulation_generation(vascular_cambium_division_rate: float, phellogen_divis
         simulation.first_phellogen(phellogen_position)
         while simulation.radius_length() <= max_length:
 
-            while simulation.equation(a, b, c, d) >= threshold and simulation.radius_length() <= max_length:
+            while simulation.equation(a, b, c, d, e) >= threshold and simulation.radius_length() <= max_length:
                 simulation.vascular_cambium_division(
                     vascular_cambium_division_rate)
-                simulation.phellogen_division(phellogen_division_rate)
-                simulation.graphical_parameters_storage(a, b, c, d)
+                simulation.phellem_production(phellogen_division_rate)
+                simulation.phelloderm_production(phelloderm_division_rate)
+                simulation.graphical_parameters_storage(a, b, c, d, e)
 
             if simulation.radius_length() <= max_length:
                 simulation.new_phellogen(phellogen_position)
