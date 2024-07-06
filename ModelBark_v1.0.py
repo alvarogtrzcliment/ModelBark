@@ -96,7 +96,7 @@ class Plant:
         phellogen_position = radius_mod.index(3)
 
         if self.sample(pddr) == 0:
-            radius_mod.insert(phellogen_position + 1,
+            radius_mod.insert(phellogen_position,
                               (2))
         
         self.radius = radius_mod
@@ -145,13 +145,12 @@ class Plant:
 
         vascular_cambium_position = radius_mod.index(1)
 
-        # TODO: Buscar una forma mejor de contar las células de floema, esta no nos vale
+        if radius_mod.count(3) == 1:
 
-        if radius_mod.count(2) == 1:
+            phellogen_position = radius_mod.index(3)
 
-            phellogen_position = radius_mod.index(2)
-            return phellogen_position - vascular_cambium_position
-
+            return radius_mod[vascular_cambium_position:phellogen_position].count(0)
+            
         else:
             return radius_mod.count(0) - vascular_cambium_position
 
@@ -159,22 +158,23 @@ class Plant:
 
         radius_mod = self.radius
 
-        # TODO: Buscar una forma mejor de contar las células de felema
-
-        if radius_mod.count(2) == 0:
+        if radius_mod.count(3) == 0:
             return 0
 
         else:
+
             num_xylem_or_phloem_cells = radius_mod.count(0)
+            num_phelloderm_cells = radius_mod.count(2)
             radius_length = len(radius_mod)
-            return radius_length - num_xylem_or_phloem_cells
+            vascular_suber_cambium_cells = 2
+            return radius_length - num_xylem_or_phloem_cells - num_phelloderm_cells - vascular_suber_cambium_cells
         
         
     def num_phelloderm_cells(self):
 
         radius_mod = self.radius
 
-        # TODO: Buscar una forma mejor de contar las células de felodermis
+        return radius_mod.count(2)
 
 
     def num_inactive_phloem_cells(self):
@@ -191,8 +191,6 @@ class Plant:
 
     def parameters(self):
 
-        # TODO: Añadir las células de felodermis a las parámetros
-
         xylem = self.num_xylem_cells()
 
         phloem = self.num_phloem_cells()
@@ -207,8 +205,6 @@ class Plant:
 
     def equation(self, a, b, c, d, e):
 
-        # TODO: Añadir las células de felodermis a las ecuación
-
         radius_parameters = self.parameters()
 
         xylem_a = a * radius_parameters[0]
@@ -221,9 +217,7 @@ class Plant:
 
         phelloderm_e = e * radius_parameters[4]
 
-        # TODO: Añadir la felodermis a la ecuación
-
-        return (1 + phellem_c + inactive_phloem_d) / (xylem_a + phloem_b)
+        return (1 + phellem_c + inactive_phloem_d + phelloderm_e) / (xylem_a + phloem_b)
 
     def graphical_parameters_storage(self, a, b, c, d, e):
 
