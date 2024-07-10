@@ -229,7 +229,7 @@ class Plant:
 
         self.inactive_phloem_storage.append(self.num_inactive_phloem_cells())
 
-        self.phelloderm_storage.append(self.num_phelloderm_cells)
+        self.phelloderm_storage.append(self.num_phelloderm_cells())
 
         self.equation_storage.append(self.equation(a, b, c, d, e))
 
@@ -260,7 +260,7 @@ class Plant:
 
         plt.plot(self.inactive_phloem_storage, label='Inactive Phloem')
 
-        plt.plot(self.phelloderm_storage, label= 'Phelloderm')
+        plt.plot(self.phelloderm_storage, label = 'Phelloderm')
 
         plt.legend()
 
@@ -321,7 +321,7 @@ def simulation_generation(vascular_cambium_division_rate: float, phellogen_divis
             else:
                 break
 
-        # simulation.plotting(threshold)
+        simulation.plotting(threshold)
         return simulation.result()
     
 

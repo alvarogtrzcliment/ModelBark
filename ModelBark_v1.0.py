@@ -229,7 +229,7 @@ class Plant:
 
         self.inactive_phloem_storage.append(self.num_inactive_phloem_cells())
 
-        self.phelloderm_storage.append(self.num_phelloderm_cells)
+        self.phelloderm_storage.append(self.num_phelloderm_cells())
 
         self.equation_storage.append(self.equation(a, b, c, d, e))
 
@@ -339,7 +339,9 @@ def multiple_simulation(iterations, input_file, output_file_name):
                                                                 input_file.iloc[combination, 5],
                                                                 input_file.iloc[combination, 6],
                                                                 input_file.iloc[combination, 7],
-                                                                input_file.iloc[combination, 8])[6])
+                                                                input_file.iloc[combination, 8],
+                                                                input_file.iloc[combination, 9],
+                                                                input_file.iloc[combination, 10],)[6])
             export_df = pd.DataFrame(output_dataset)
             export_df.iloc[:,0:input_file.iloc[0, 8]].to_csv(output_file_name, index=False, header= False)
 
@@ -369,30 +371,35 @@ tk.Label(input_frame, text='r',
          bg='white').grid(row=0, column=0, padx=(30, 0))
 tk.Label(input_frame, text='\u03B2',
          bg='white').grid(row=0, column=1)
+tk.Label(input_frame, text='\u03B3',
+         bg='white').grid(row=0, column=2)
 tk.Label(input_frame, text='p',
           
-         bg='white').grid(row=0, column=2)
-tk.Label(input_frame, text='a', bg='white').grid(row=0, column=3)
-tk.Label(input_frame, text='b', bg='white').grid(row=0, column=4)
-tk.Label(input_frame, text='c', bg='white').grid(row=0, column=5)
-tk.Label(input_frame, text='d', bg='white').grid(row=0, column=6)
-tk.Label(input_frame, text='K', bg='white').grid(row=0, column=7)
+         bg='white').grid(row=0, column=3)
+tk.Label(input_frame, text='a', bg='white').grid(row=0, column=4)
+tk.Label(input_frame, text='b', bg='white').grid(row=0, column=5)
+tk.Label(input_frame, text='c', bg='white').grid(row=0, column=6)
+tk.Label(input_frame, text='d', bg='white').grid(row=0, column=7)
+tk.Label(input_frame, text='e', bg='white').grid(row=0, column=8)
+tk.Label(input_frame, text='K', bg='white').grid(row=0, column=9)
 tk.Label(input_frame, text='ML',
-         bg='white').grid(row=0, column=8, pady=5)
+         bg='white').grid(row=0, column=10, pady=5)
 tk.Label(input_frame, text="Input File Name",
-         bg="white").grid(row=2, column=5, pady=5)
+         bg="white").grid(row=2, column=8, pady=5)
 tk.Label(input_frame, text="Output File Name",
-         bg="white").grid(row=2, column=6, pady=5)
+         bg="white").grid(row=2, column=9, pady=5)
 tk.Label(input_frame, text="Iterations",
-         bg="white").grid(row=2, column=7, pady=5)
+         bg="white").grid(row=2, column=10, pady=5)
 
 vcdr_input = tk.Entry(input_frame, bg='pale green', width=12)
 pdr_input = tk.Entry(input_frame, bg='pale green', width=12)
+phdr_input = tk.Entry(input_frame, bg='pale green', width=12)
 ppos_input = tk.Entry(input_frame, bg='pale green', width=12)
 a_input = tk.Entry(input_frame, bg='pale green', width=12)
 b_input = tk.Entry(input_frame, bg='pale green', width=12)
 c_input = tk.Entry(input_frame, bg='pale green', width=12)
 d_input = tk.Entry(input_frame, bg='pale green', width=12)
+e_input = tk.Entry(input_frame, bg='pale green', width=12)
 threshold_input = tk.Entry(input_frame, bg='pale green', width=12)
 max_length_input = tk.Entry(input_frame, bg='pale green', width=12)
 file_name_input = tk.Entry(input_frame, bg="pale green", width=12)
@@ -401,24 +408,28 @@ iterations_input = tk.Entry(input_frame, bg="pale green", width=12)
 
 vcdr_input.grid(row=1, column=0, padx=(30, 0), pady=10)
 pdr_input.grid(row=1, column=1, padx=20, pady=10)
-ppos_input.grid(row=1, column=2, padx=20, pady=10)
-a_input.grid(row=1, column=3, padx=20, pady=10)
-b_input.grid(row=1, column=4, padx=20, pady=10)
-c_input.grid(row=1, column=5, padx=20, pady=10)
-d_input.grid(row=1, column=6, padx=20, pady=10)
-threshold_input.grid(row=1, column=7, padx=20, pady=10)
-max_length_input.grid(row=1, column=8, padx=20, pady=10)
-file_name_input.grid(row=3, column=5, padx=20, pady=(0, 30))
-output_name_input.grid(row=3, column=6, padx=20, pady=(0, 30))
-iterations_input.grid(row=3, column=7, padx=20, pady=(0, 30))
+phdr_input.grid(row=1, column=2, padx=20, pady=10)
+ppos_input.grid(row=1, column=3, padx=20, pady=10)
+a_input.grid(row=1, column=4, padx=20, pady=10)
+b_input.grid(row=1, column=5, padx=20, pady=10)
+c_input.grid(row=1, column=6, padx=20, pady=10)
+d_input.grid(row=1, column=7, padx=20, pady=10)
+e_input.grid(row=1, column=8, padx=20, pady=10)
+threshold_input.grid(row=1, column=9, padx=20, pady=10)
+max_length_input.grid(row=1, column=10, padx=20, pady=10)
+file_name_input.grid(row=3, column=8, padx=20, pady=(0, 30))
+output_name_input.grid(row=3, column=9, padx=20, pady=(0, 30))
+iterations_input.grid(row=3, column=10, padx=20, pady=(0, 30))
 
 vcdr_input.insert(0, 0.9)
 pdr_input.insert(0, 0.054)
 ppos_input.insert(0,0.3)
+phdr_input.insert(0,0.05)
 a_input.insert(0, 0.016)
 b_input.insert(0, 0.008)
 c_input.insert(0, 0.3)
 d_input.insert(0, 0.002)
+e_input.insert(0,0.001)
 threshold_input.insert(0, 1)
 max_length_input.insert(0, 1000)
 
@@ -428,10 +439,12 @@ def single_run():
     vcdr_get = vcdr_input.get()
     pdr_get = pdr_input.get()
     ppos_get = ppos_input.get()
+    phdr_get = phdr_input.get()
     a_get = a_input.get()
     b_get = b_input.get()
     c_get = c_input.get()
     d_get = d_input.get()
+    e_get = e_input.get()
     threshold_get = threshold_input.get()
     max_length_get = max_length_input.get()
     tester = bool()
@@ -440,10 +453,12 @@ def single_run():
         vcdr_get = float(vcdr_get)
         pdr_get = float(pdr_get)
         ppos_get = float(ppos_get)
+        phdr_get = float(phdr_get)
         a_get = float(a_get)
         b_get = float(b_get)
         c_get = float(c_get)
         d_get = float(d_get)
+        e_get = float(e_get)
         threshold_get = float(threshold_get)
         max_length_get = int(max_length_get)
         tester = True
@@ -458,8 +473,8 @@ def single_run():
         error.mainloop()
 
     if tester:
-        input_data = [vcdr_get, pdr_get, ppos_get, a_get, b_get,
-                      c_get, d_get, threshold_get, max_length_get]
+        input_data = [vcdr_get, pdr_get, phdr_get, ppos_get, a_get, b_get,
+                      c_get, d_get, e_get, threshold_get, max_length_get]
         run = simulation_generation(input_data[0],
                                     input_data[1],
                                     input_data[2],
@@ -468,10 +483,12 @@ def single_run():
                                     input_data[5],
                                     input_data[6],
                                     input_data[7],
-                                    input_data[8])
+                                    input_data[8],
+                                    input_data[9],
+                                    input_data[10])
 
-        radius_list = run[6]
-        res = [(max(run[6]) + 1) if item ==
+        radius_list = run[7]
+        res = [(max(run[7]) + 1) if item ==
                1 else item for item in radius_list]
         heatmap = np.array(res)
         heatmap = np.expand_dims(heatmap, axis=0)
@@ -518,48 +535,57 @@ def single_run():
                  text=f'\u03B2: {input_data[1]}',
                  bg='white').grid(row=3, sticky="W")
         tk.Label(statistics_frame,
-                 text=f'p: {input_data[2]}',
+                 text=f'\u03B3: {input_data[2]}',
                  bg='white').grid(row=4, sticky="W")
         tk.Label(statistics_frame,
-                 text=f'a: {input_data[3]}',
+                 text=f'p: {input_data[3]}',
                  bg='white').grid(row=5, sticky="W")
         tk.Label(statistics_frame,
-                 text=f'b: {input_data[4]}',
+                 text=f'a: {input_data[4]}',
                  bg='white').grid(row=6, sticky="W")
         tk.Label(statistics_frame,
-                 text=f'c: {input_data[5]}',
+                 text=f'b: {input_data[5]}',
                  bg='white').grid(row=7, sticky="W")
         tk.Label(statistics_frame,
-                 text=f'd: {input_data[6]}',
+                 text=f'c: {input_data[6]}',
                  bg='white').grid(row=8, sticky="W")
         tk.Label(statistics_frame,
-                 text=f'K: {input_data[7]}',
+                 text=f'd: {input_data[7]}',
                  bg='white').grid(row=9, sticky="W")
         tk.Label(statistics_frame,
-                 text=f'Length of the radius: {input_data[8]}',
+                 text=f'e: {input_data[8]}',
                  bg='white').grid(row=10, sticky="W")
+        tk.Label(statistics_frame,
+                 text=f'K: {input_data[9]}',
+                 bg='white').grid(row=11, sticky="W")
+        tk.Label(statistics_frame,
+                 text=f'Length of the radius: {input_data[10]}',
+                 bg='white').grid(row=12, sticky="W")
         tk.Label(statistics_frame,
                  text='Output Statistics:',
                  bg='white',
-                 font=('*font', 10, 'bold')).grid(row=11, sticky="W")
+                 font=('*font', 10, 'bold')).grid(row=13, sticky="W")
         tk.Label(statistics_frame,
                  text=f'Xylem cells number: {run[0]}',
-                 bg='white').grid(row=12, sticky="W")
-        tk.Label(statistics_frame,
-                 text=f'Phloem cells number: {run[1]}',
-                 bg='white').grid(row=13, sticky="W")
-        tk.Label(statistics_frame,
-                 text=f'Phellem cells number: {run[2]}',
                  bg='white').grid(row=14, sticky="W")
         tk.Label(statistics_frame,
-                 text=f'Inactive phloem cells number: {run[3]}',
+                 text=f'Phloem cells number: {run[1]}',
                  bg='white').grid(row=15, sticky="W")
         tk.Label(statistics_frame,
-                 text=f'Phellogens created: {run[4]}',
+                 text=f'Phellem cells number: {run[2]}',
                  bg='white').grid(row=16, sticky="W")
         tk.Label(statistics_frame,
-                 text=f'Moment when the first phellogen was created: {run[5]}',
+                 text=f'Inactive phloem cells number: {run[3]}',
                  bg='white').grid(row=17, sticky="W")
+        tk.Label(statistics_frame,
+                 text=f'Phelloderm cells number: {run[4]}',
+                 bg='white').grid(row=18, sticky="W")
+        tk.Label(statistics_frame,
+                 text=f'Phellogens created: {run[5]}',
+                 bg='white').grid(row=19, sticky="W")
+        tk.Label(statistics_frame,
+                 text=f'Moment when the first phellogen was created: {run[6]}',
+                 bg='white').grid(row=20, sticky="W")
 
         img_frame = tk.Frame(main_frame, bg='white')
         img_frame.grid(row=0, column=1)
@@ -601,7 +627,7 @@ def single_run():
         tk.Label(footer_frame, text="Radius", bg="white",
                  font=('*font', 10, 'bold')).grid(row=0, column=0)
         radius_text = tk.Text(footer_frame, height=5, width=120, wrap="word")
-        radius_text.insert('end', run[6])
+        radius_text.insert('end', run[7])
         radius_text.grid(row=1, column=0, padx=10, pady=10)
 
         results_menu.mainloop()
@@ -637,10 +663,10 @@ def multiple_run():
 
 
 run_b = tk.Button(input_frame, text='Run', width=13, command=single_run)
-run_b.grid(row=1, column=9, padx=20)
+run_b.grid(row=1, column=11, padx=20)
 
 multiple_run_b = tk.Button(
     input_frame, text='Multiple Run', width=13, command=multiple_run)
-multiple_run_b.grid(row=3, column=8, pady=(0, 30))
+multiple_run_b.grid(row=3, column=11, pady=(0, 30))
 
 main_menu.mainloop()
