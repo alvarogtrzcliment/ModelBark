@@ -14,8 +14,11 @@ import tkinter as tk
 import os
 from PIL import ImageTk, Image
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
+
+matplotlib.use('agg')
 
 working_directory = os.getcwd()
 
@@ -282,7 +285,7 @@ class Plant:
 
         plt.savefig('Figures/Equation_plot.jpg')
 
-        plt.close()
+        plt.close('all')
 
 
 def simulation_generation(vascular_cambium_division_rate: float, phellogen_division_rate: float, phelloderm_division_rate: float ,phellogen_position: float, a: float, b: float, c: float, d: float, e:float, threshold: float, max_length: int):
@@ -328,9 +331,9 @@ def multiple_simulation(iterations, input_file, output_file_name):
             output_dataset = []
 
             for combination in range(len(input_file)):
-                print(f'Running combination n: {combination + 1}')
 
                 for iteration in range(iterations):
+                    print(f'Running combination n: {combination + 1}, iteration:{iteration + 1}')
                     output_dataset.append(simulation_generation(input_file.iloc[combination, 0],
                                                                 input_file.iloc[combination, 1],
                                                                 input_file.iloc[combination, 2],
@@ -341,9 +344,10 @@ def multiple_simulation(iterations, input_file, output_file_name):
                                                                 input_file.iloc[combination, 7],
                                                                 input_file.iloc[combination, 8],
                                                                 input_file.iloc[combination, 9],
-                                                                input_file.iloc[combination, 10],)[6])
+                                                                input_file.iloc[combination, 10],)[7])
             export_df = pd.DataFrame(output_dataset)
-            export_df.iloc[:,0:input_file.iloc[0, 8]].to_csv(output_file_name, index=False, header= False)
+            export_df.iloc[:,0:input_file.iloc[0, 10]].to_csv(output_file_name, index=False, header= False)
+            print('Multiple Simulation Completed')
 
 main_menu = tk.Tk()
 
@@ -494,6 +498,7 @@ def single_run():
         heatmap = np.expand_dims(heatmap, axis=0)
 
         plt.figure(figsize=(14, 1.8))
+        # YlOrBr tab20
         plt.imshow(heatmap, aspect='auto', cmap='YlOrBr')
         plt.axis('on')
         plt.title('Radius heatmap plot')
